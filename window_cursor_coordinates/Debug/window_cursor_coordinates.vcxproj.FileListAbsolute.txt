@@ -1,0 +1,2 @@
+E:\Visual Studio Projects\window_cursor_coordinates\Debug\window_cursor_coordinates.exe
+E:\Visual Studio Projects\window_cursor_coordinates\Debug\window_cursor_coordinates.pdb

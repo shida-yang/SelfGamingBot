@@ -1,0 +1,2 @@
+E:\Visual Studio Projects\get_color_at_pixel\Debug\get_color_at_pixel.exe
+E:\Visual Studio Projects\get_color_at_pixel\Debug\get_color_at_pixel.pdb
