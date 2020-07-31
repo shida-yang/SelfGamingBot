@@ -24,3 +24,6 @@ ipch
 *.db
 *.opendb
 *.db
+*.db-wal
+*.db
+route_detection/.vs/route_detection/v16/Browse.VC.db
