@@ -49,7 +49,8 @@ move_unit_t route_common[] {
   { LEFT_JUMP, 0 },
   { RIGHT, 0.1 },
   { RIGHT_JUMP, 0 },
-  { RIGHT, 2 },
+  { RIGHT, 1.5 },
+  { JUMP, 0 },
   { JUMP, 0 },
   { RIGHT, 2 },
   { JUMP, 0 },
@@ -99,7 +100,7 @@ move_unit_t route_1[] = {
   { LEFT_JUMP, 0 },
   { LEFT, 1.6 },
   { LEFT_JUMP, 0 },
-  { LEFT, 5.4 },
+  { LEFT, 5.2 },
   { UP, 0 },
   { FINISH, 0 }
 };
@@ -140,7 +141,7 @@ move_unit_t route_2[] = {
   { LEFT, 2.8 },
   { LEFT_JUMP, 0 },
 //  { LEFT, 6.65 },
-  {LEFT_UP, 7},
+  {LEFT_UP, 8},
   { UP, 1 },
   { FINISH, 0 }
 };

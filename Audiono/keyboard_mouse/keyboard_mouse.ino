@@ -103,9 +103,9 @@ void setup() {
 //  press_key(JUMP);
 //  delay(1000);
 //  release_key(JUMP);
-  PRESS_M;
-  delay(5000);
-  PRESS_M;
+//  PRESS_M;
+//  delay(5000);
+//  PRESS_M;
 }
 
 void loop()                  {

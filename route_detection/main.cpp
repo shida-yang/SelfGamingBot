@@ -25,6 +25,7 @@ void move_mouse(int x, int y);
 void left_single_click(int x, int y);
 void left_double_click(int x, int y);
 
+void first_time_adjust_pos(int window_x, int window_y);
 void talk_to_NPC_SC(bool first_time, int window_x, int window_y);
 void talk_to_NPC_XJS(int window_x, int window_y);
 void get_task(int window_x, int window_y);
@@ -39,6 +40,9 @@ HWND GetConsoleHwnd(void);
 
 HWND color_screen_windows[20];
 bool is_first_time[20];
+bool route_failed[20];
+int success_time[20];
+
 int number_of_screens;
 
 HWND console_window;
@@ -51,6 +55,8 @@ int main() {
 
 	for (int i = 0; i < 20; i++) {
 		is_first_time[i] = 1;
+		route_failed[i] = 0;
+		success_time[i] = 0;
 	}
 
 	while (1) {   
@@ -59,14 +65,25 @@ int main() {
 
 			search_color_screens();
 
-			for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < number_of_screens; i++) {
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+			for (int j = 0; j < 10; j++) {
 
 				for (int i = 0; i < number_of_screens; i++) {
 
-					cout << "------------------- Window " << i << "-------------------" << endl;
+					cout << "------------------- Window " << i+1 << " Time " << j+1 << " -------------------" << endl;
 
+					if (route_failed[i]) {
+						printf("Route failed before, skipping this window.\n");
+						continue;
+					}
+
+					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_RESTORE, 0);
+					Sleep(1000);
 					SetForegroundWindow(color_screen_windows[i]);
-
 					Sleep(1000);
 
 					RECT rect;
@@ -76,6 +93,7 @@ int main() {
 					window_x = rect.left;
 					window_y = rect.top;
 
+					printf("Talk to SC.\n");
 					if (is_first_time[i]) {
 						talk_to_NPC_SC(1, window_x, window_y);
 						is_first_time[i] = 0;
@@ -96,21 +114,49 @@ int main() {
 
 					wait_for_running_finish();
 
+					if (get_pixel_color(window_x + 543, window_y + 627) != 4413) {	// D3D9=4413, OpenGL=???
+						route_failed[i] = 1;
+						printf("Route failed.\n");
+
+						PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+						Sleep(1000);
+
+						continue;
+					}
+
+					printf("Talk to XJS.\n");
 					talk_to_NPC_XJS(window_x, window_y);
 
+					printf("Get task.\n");
 					get_task(window_x, window_y);
 
+					printf("Talk to XJS.\n");
 					talk_to_NPC_XJS(window_x, window_y);
 
+					printf("Answer question.\n");
 					answer_question(rand() % 4, window_x, window_y);
 
+					printf("Talk to XJS.\n");
 					talk_to_NPC_XJS(window_x, window_y);
 
+					Sleep(1000);
+
+					printf("Close dialog.\n");
 					close_dialog(window_x, window_y);
+
+					success_time[i]++;
+
+					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+					Sleep(1000);
 				}
 
 			}
-		
+
+			printf("---------- Finish Running ----------\n");
+			for (int i = 0; i < number_of_screens; i++) {
+				printf("Window %d succeed times: %d\n", i+1, success_time[i]);
+			}
+			printf("------------------------------------\n");
 		}
 		
 
@@ -190,6 +236,7 @@ void wait_for_running_finish() {
 		wait_for_serial_response();
 	} while (strcmp(incomingData, "F") != 0);
 	printf("Finishes Running\n");
+
 }
 
 void wait_for_serial_response() {
@@ -213,7 +260,7 @@ void move_mouse(int x, int y) {
 
 void left_single_click(int x, int y) {
 	SetForegroundWindow(console_window);
-	Sleep(500);
+	Sleep(700);
 
 	move_mouse(x, y);
 
@@ -229,12 +276,12 @@ void left_single_click(int x, int y) {
 
 	printf("Left single click at [%d, %d]\n", x, y);
 
-	Sleep(1500);
+	Sleep(2000);
 }
 
 void left_double_click(int x, int y) {
 	SetForegroundWindow(console_window);
-	Sleep(500);
+	Sleep(700);
 
 	move_mouse(x, y);
 
@@ -250,9 +297,12 @@ void left_double_click(int x, int y) {
 
 	printf("Left double click at [%d, %d]\n", x, y);
 
-	Sleep(1500);
+	Sleep(2000);
 }
 
+void first_time_adjust_pos(int window_x, int window_y) {
+
+}
 
 void talk_to_NPC_SC(bool first_time, int window_x, int window_y) {
 	// talk to NPC_SC
