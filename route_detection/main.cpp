@@ -1,9 +1,12 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <Windows.h>
 #include <string>
 #include <string.h>
 #include <stdio.h>
 #include <random>
+#include <time.h> 
 
 #include "SerialPort.hpp"
 
@@ -59,7 +62,7 @@ int main() {
 		success_time[i] = 0;
 	}
 
-	while (1) {   
+	while (0) {   
 
 		if (GetAsyncKeyState(VK_NUMPAD0)) {
 
@@ -104,6 +107,10 @@ int main() {
 
 					Sleep(1000);
 
+					move_mouse(0, 0);
+
+					Sleep(500);
+
 					int route = detect_route(color_screen_windows[i]);
 
 					cout << "route detected: " << route << endl;
@@ -116,7 +123,12 @@ int main() {
 
 					if (get_pixel_color(window_x + 543, window_y + 627) != 4413) {	// D3D9=4413, OpenGL=???
 						route_failed[i] = 1;
-						printf("Route failed.\n");
+						
+						time_t my_time = time(NULL);
+
+						struct tm* tmp = localtime(&my_time);
+
+						printf("[%02d:%02d:%02d] Route failed.\n", tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
 
 						PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
 						Sleep(1000);
