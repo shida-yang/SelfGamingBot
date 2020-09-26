@@ -45,10 +45,15 @@ HWND color_screen_windows[20];
 bool is_first_time[20];
 bool route_failed[20];
 int success_time[20];
+uint64_t last_finish_time[20];
+
+time_t my_time;
 
 int number_of_screens;
 
 HWND console_window;
+
+HWND curr_game_window;
 
 int main() {
 
@@ -56,15 +61,30 @@ int main() {
 
 	establish_serial();
 
-	for (int i = 0; i < 20; i++) {
-		is_first_time[i] = 1;
-		route_failed[i] = 0;
-		success_time[i] = 0;
-	}
+	while (1) {   
 
-	while (0) {   
+		cout << "行脚=0" << endl;
+		cout << "推举=1" << endl;
+		cout << "退出=9" << endl;
 
-		if (GetAsyncKeyState(VK_NUMPAD0)) {
+		int choice = 0;
+
+		cout << "Your choice: ";
+		cin >> choice;
+
+		if (choice == 0) {
+
+			int run_times = 0;
+
+			cout << "Enter run times: " << endl;
+			cin >> run_times;
+
+			for (int i = 0; i < 20; i++) {
+				is_first_time[i] = 1;
+				route_failed[i] = 0;
+				success_time[i] = 0;
+				last_finish_time[i] = 0;
+			}
 
 			search_color_screens();
 
@@ -73,9 +93,17 @@ int main() {
 				Sleep(1000);
 			}
 
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < run_times; j++) {
 
 				for (int i = 0; i < number_of_screens; i++) {
+
+					my_time = time(NULL);
+
+					while (my_time - last_finish_time[i] <= 300) {
+						my_time = time(NULL);
+						cout << "Waiting for 5 min. Remaining: " << (300 + last_finish_time[i] - my_time) << endl;
+						Sleep((310 + last_finish_time[i] - my_time) * 1000);
+					}
 
 					cout << "------------------- Window " << i+1 << " Time " << j+1 << " -------------------" << endl;
 
@@ -88,6 +116,8 @@ int main() {
 					Sleep(1000);
 					SetForegroundWindow(color_screen_windows[i]);
 					Sleep(1000);
+
+					curr_game_window = color_screen_windows[i];
 
 					RECT rect;
 					int window_x, window_y;
@@ -105,15 +135,21 @@ int main() {
 						talk_to_NPC_SC(0, window_x, window_y);
 					}
 
-					Sleep(1000);
-
-					move_mouse(0, 0);
-
-					Sleep(500);
+					Sleep(2000);
 
 					int route = detect_route(color_screen_windows[i]);
 
 					cout << "route detected: " << route << endl;
+
+					int route1 = detect_route(color_screen_windows[i]);
+
+					cout << "route detected: " << route1 << endl;
+
+					while (route1 != route) {
+						route = route1;
+						route1 = detect_route(color_screen_windows[i]);
+						cout << "route detected: " << route1 << endl;
+					}
 
 					set_route(route);
 
@@ -124,7 +160,7 @@ int main() {
 					if (get_pixel_color(window_x + 543, window_y + 627) != 4413) {	// D3D9=4413, OpenGL=???
 						route_failed[i] = 1;
 						
-						time_t my_time = time(NULL);
+						my_time = time(NULL);
 
 						struct tm* tmp = localtime(&my_time);
 
@@ -158,6 +194,8 @@ int main() {
 
 					success_time[i]++;
 
+					last_finish_time[i] = time(NULL);
+
 					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
 					Sleep(1000);
 				}
@@ -169,6 +207,100 @@ int main() {
 				printf("Window %d succeed times: %d\n", i+1, success_time[i]);
 			}
 			printf("------------------------------------\n");
+		}
+
+		if (choice == 1) {
+
+			bool yunshu_finished = 0;
+
+			cout << "跑了运输吗？" << endl;
+			cin >> yunshu_finished;
+
+			// Get all color window
+			search_color_screens();
+
+			// Minimize all the windows
+			for (int i = 0; i < number_of_screens; i++) {
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+			// Open each window in order
+			for (int i = 0; i < number_of_screens; i++) {
+
+				// restore window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_RESTORE, 0);
+				Sleep(1000);
+				SetForegroundWindow(color_screen_windows[i]);
+				Sleep(1000);
+
+				//Get window location
+				RECT rect;
+				int window_x, window_y;
+
+				GetWindowRect(color_screen_windows[i], &rect);
+				window_x = rect.left;
+				window_y = rect.top;
+
+				// talk to NPC_SC
+				left_double_click(window_x + 456, window_y + 532);
+				left_single_click(window_x + 499, window_y + 288);
+				if (yunshu_finished) {
+					left_single_click(window_x + 416, window_y + 430);
+				}
+				else {
+					left_single_click(window_x + 416, window_y + 456);
+				}
+				left_single_click(window_x + 449, window_y + 405);
+				left_double_click(window_x + 456, window_y + 532);
+				left_single_click(window_x + 499, window_y + 288);
+				left_single_click(window_x + 407, window_y + 404);
+
+				// record time
+				last_finish_time[i] = time(NULL);
+
+				// minimize window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+			for (int i = 0; i < number_of_screens; i++) {
+				// restore window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_RESTORE, 0);
+				Sleep(1000);
+				SetForegroundWindow(color_screen_windows[i]);
+				Sleep(1000);
+
+				my_time = time(NULL);
+				if (my_time - last_finish_time[i] <= 65) {
+					cout << "Waiting for 65 sec. Remaining: " << (65 + last_finish_time[i] - my_time) << endl;
+					Sleep((65 + last_finish_time[i] - my_time) * 1000);
+				}
+
+				//Get window location
+				RECT rect;
+				int window_x, window_y;
+
+				GetWindowRect(color_screen_windows[i], &rect);
+				window_x = rect.left;
+				window_y = rect.top;
+
+				left_single_click(window_x + 713, window_y + 618);
+
+				left_double_click(window_x + 456, window_y + 532);
+				left_single_click(window_x + 499, window_y + 288);
+				left_single_click(window_x + 407, window_y + 404);
+				left_single_click(window_x + 517, window_y + 518);
+
+				// minimize window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+		}
+
+		if (choice == 9) {
+			break;
 		}
 		
 
@@ -276,7 +408,9 @@ void left_single_click(int x, int y) {
 
 	move_mouse(x, y);
 
-	Sleep(300);
+	SetForegroundWindow(curr_game_window);
+
+	Sleep(700);
 
 	char buf[2];
 	sprintf_s(buf, 2, "%c", 's');
@@ -297,7 +431,9 @@ void left_double_click(int x, int y) {
 
 	move_mouse(x, y);
 
-	Sleep(300);
+	SetForegroundWindow(curr_game_window);
+	
+	Sleep(700);
 
 	char buf[2];
 	sprintf_s(buf, 2, "%c", 'd');
@@ -310,10 +446,6 @@ void left_double_click(int x, int y) {
 	printf("Left double click at [%d, %d]\n", x, y);
 
 	Sleep(2000);
-}
-
-void first_time_adjust_pos(int window_x, int window_y) {
-
 }
 
 void talk_to_NPC_SC(bool first_time, int window_x, int window_y) {
