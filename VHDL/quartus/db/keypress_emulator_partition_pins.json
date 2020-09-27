@@ -1,0 +1,153 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "to_usb[0]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[1]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[2]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[3]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[4]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[5]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[6]",
+					"strict" : false
+				},
+				{
+					"name" : "to_usb[7]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[1]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[0]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[3]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[2]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[5]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[4]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[7]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[6]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[17]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[16]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[9]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[8]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[11]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[10]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[13]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[12]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[15]",
+					"strict" : false
+				},
+				{
+					"name" : "from_usb[14]",
+					"strict" : false
+				},
+				{
+					"name" : "pressing",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[4]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[1]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[2]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[3]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[0]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[7]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[5]",
+					"strict" : false
+				},
+				{
+					"name" : "key_map_in[6]",
+					"strict" : false
+				},
+				{
+					"name" : "strobe",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

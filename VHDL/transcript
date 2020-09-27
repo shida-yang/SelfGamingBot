@@ -1,0 +1,21 @@
+# Compile of mux_19_1.vhd failed with 1 errors.
+# Compile of Keyboard_Controller.vhd failed with 1 errors.
+# 2 compiles, 2 failed with 2 errors.
+# Compile of mux_19_1.vhd was successful.
+# Compile of Keyboard_Controller.vhd was successful.
+# 2 compiles, 0 failed with no errors.
+# Compile of Keyboard_Controller.vhd failed with 1 errors.
+# Compile of Keyboard_Controller.vhd was successful.
+# Compile of Keyboard_Controller.vhd failed with 3 errors.
+# Compile of Keyboard_Controller.vhd failed with 7 errors.
+# Compile of synchronizer.vhd failed with 2 errors.
+# 2 compiles, 2 failed with 9 errors.
+# Compile of Keyboard_Controller.vhd failed with 6 errors.
+# Compile of synchronizer.vhd was successful.
+# 2 compiles, 1 failed with 6 errors.
+# Compile of Keyboard_Controller.vhd was successful.
+# Compile of synchronizer.vhd was successful.
+# 2 compiles, 0 failed with no errors.
+# Compile of Keyboard_Controller.vhd was successful.
+# Compile of synchronizer.vhd was successful.
+# 2 compiles, 0 failed with no errors.

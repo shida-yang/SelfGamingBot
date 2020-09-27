@@ -1,0 +1,154 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dE:/Quartus/Quartus_19_1
+Ekeyboard_controller
+Z0 w1601177164
+Z1 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z4 dE:/Free_Time_Projects/QQSG Route detection/VHDL
+Z5 8E:/Free_Time_Projects/QQSG Route detection/VHDL/Keyboard_Controller.vhd
+Z6 FE:/Free_Time_Projects/QQSG Route detection/VHDL/Keyboard_Controller.vhd
+l0
+L5
+Vh_K0>?d@cLNAKMGO_ZVcj0
+!s100 G6;SHzSVlLoKgf<;Lm`UA0
+Z7 OV;C;10.5b;63
+32
+Z8 !s110 1601177171
+!i10b 1
+Z9 !s108 1601177171.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|E:/Free_Time_Projects/QQSG Route detection/VHDL/Keyboard_Controller.vhd|
+Z11 !s107 E:/Free_Time_Projects/QQSG Route detection/VHDL/Keyboard_Controller.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Abhv
+Z14 DEx4 work 12 synchronizer 0 22 @N:lghK7]]GnKYL<]2Shl0
+R1
+R2
+R3
+DEx4 work 19 keyboard_controller 0 22 h_K0>?d@cLNAKMGO_ZVcj0
+l21
+L18
+VC=I9[LT?k]nnPcim@8JhE3
+!s100 k5eclXo8_<Znhc>X7[JRc3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Astr
+R1
+R2
+R3
+DEx4 work 19 keyboard_controller 0 22 _]4HlUJ9B8NM>S5lAjS5n1
+l17
+L16
+VWio<cYd>hbglGbe4:a`H;2
+!s100 kd1:f9UP5f^7cIz86?aln3
+R7
+32
+Z15 !s110 1601157220
+!i10b 1
+Z16 !s108 1601157220.000000
+R10
+R11
+!i113 1
+R12
+R13
+Z17 w1601157216
+Emux_19_1
+R17
+R1
+R2
+R3
+R4
+Z18 8E:/Free_Time_Projects/QQSG Route detection/VHDL/mux_19_1.vhd
+Z19 FE:/Free_Time_Projects/QQSG Route detection/VHDL/mux_19_1.vhd
+l0
+L5
+VTj:LD3GXMFo=<^d^`RK8N3
+!s100 C5ICBM?ig72VcUf_iNb@<1
+R7
+32
+R15
+!i10b 1
+R16
+Z20 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|E:/Free_Time_Projects/QQSG Route detection/VHDL/mux_19_1.vhd|
+Z21 !s107 E:/Free_Time_Projects/QQSG Route detection/VHDL/mux_19_1.vhd|
+!i113 1
+R12
+R13
+Abhv
+R1
+R2
+R3
+DEx4 work 8 mux_19_1 0 22 Tj:LD3GXMFo=<^d^`RK8N3
+l15
+L14
+VV2Z?bM;4_PGMNREIK564n3
+!s100 RzIUF0hIWG9nI^d=5Nbah3
+R7
+32
+R15
+!i10b 1
+R16
+R20
+R21
+!i113 1
+R12
+R13
+Esynchronizer
+Z22 w1601176603
+R1
+R2
+R3
+R4
+Z23 8E:/Free_Time_Projects/QQSG Route detection/VHDL/synchronizer.vhd
+Z24 FE:/Free_Time_Projects/QQSG Route detection/VHDL/synchronizer.vhd
+l0
+L5
+V@N:lghK7]]GnKYL<]2Shl0
+!s100 G??CU^_l:l2ia1VGMTBGY0
+R7
+32
+R8
+!i10b 1
+R9
+Z25 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|E:/Free_Time_Projects/QQSG Route detection/VHDL/synchronizer.vhd|
+Z26 !s107 E:/Free_Time_Projects/QQSG Route detection/VHDL/synchronizer.vhd|
+!i113 1
+R12
+R13
+Abhv
+R1
+R2
+R3
+R14
+l15
+L14
+Z27 Vz`]V;I4k92ojXDL6fnR6G3
+Z28 !s100 b_N0gOc]Q1aMdInI]6Nme0
+R7
+32
+R8
+!i10b 1
+R9
+R25
+R26
+!i113 1
+R12
+R13
