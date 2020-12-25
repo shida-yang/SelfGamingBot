@@ -12,18 +12,18 @@
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM10";
+const char* portName = "\\\\.\\COM4";
 SerialPort* arduino;
 char incomingData[255];
 
-void establish_serial();
+void establish_serial();                                                   
 void set_route(int route);
 void open_map();
 void close_map();
 void start_running();
 void wait_for_serial_response();
 void wait_for_running_finish();
-
+                                                             
 void move_mouse(int x, int y);
 void left_single_click(int x, int y);
 void left_double_click(int x, int y);
@@ -34,6 +34,9 @@ void talk_to_NPC_XJS(int window_x, int window_y);
 void get_task(int window_x, int window_y);
 void answer_question(int selection, int window_x, int window_y);
 void close_dialog(int window_x, int window_y);
+
+void talk_to_NPC_GJ();
+void walk_GJ(int window_x, int window_y);
 
 int detect_route(HWND hwnd);
 uint32_t get_pixel_color(int x, int y);
@@ -65,6 +68,7 @@ int main() {
 
 		cout << "行脚=0" << endl;
 		cout << "推举=1" << endl;
+		cout << "官爵=2" << endl;
 		cout << "退出=9" << endl;
 
 		int choice = 0;
@@ -76,6 +80,7 @@ int main() {
 
 			int run_times = 0;
 
+			cout << "关闭输入法!!!!" << endl;
 			cout << "Enter run times: " << endl;
 			cin >> run_times;
 
@@ -242,14 +247,16 @@ int main() {
 				window_x = rect.left;
 				window_y = rect.top;
 
+				printf("%d号接任务\n", i);
+
 				// talk to NPC_SC
 				left_double_click(window_x + 456, window_y + 532);
 				left_single_click(window_x + 499, window_y + 288);
 				if (yunshu_finished) {
-					left_single_click(window_x + 416, window_y + 430);
+					left_single_click(window_x + 416, window_y + 453);
 				}
 				else {
-					left_single_click(window_x + 416, window_y + 456);
+					left_single_click(window_x + 416, window_y + 477);
 				}
 				left_single_click(window_x + 449, window_y + 405);
 				left_double_click(window_x + 456, window_y + 532);
@@ -270,6 +277,8 @@ int main() {
 				Sleep(1000);
 				SetForegroundWindow(color_screen_windows[i]);
 				Sleep(1000);
+
+				printf("%d号交任务\n", i);
 
 				my_time = time(NULL);
 				if (my_time - last_finish_time[i] <= 65) {
@@ -295,6 +304,71 @@ int main() {
 				// minimize window
 				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
 				Sleep(1000);
+			}
+
+		}
+
+		if (choice == 2) {
+
+			// Get all color window
+			search_color_screens();
+
+			// Minimize all the windows
+			for (int i = 0; i < number_of_screens; i++) {
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+			// clear last finish time
+			for (int i = 0; i < number_of_screens; i++) {
+				last_finish_time[i] = 0;
+			}
+
+			for (int j = 0; j < 4; j++) {
+				// Open each window in order
+				for (int i = 0; i < number_of_screens; i++) {
+
+					if (i == 0) {
+						my_time = time(NULL);
+						if (my_time - last_finish_time[i] <= 65) {
+							cout << "Waiting for 65 sec. Remaining: " << (65 + last_finish_time[i] - my_time) << endl;
+							Sleep((65 + last_finish_time[i] - my_time) * 1000);
+						}
+					}
+					
+					// restore window
+					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_RESTORE, 0);
+					Sleep(1000);
+					SetForegroundWindow(color_screen_windows[i]);
+					Sleep(1000);
+
+					//Get window location
+					RECT rect;
+					int window_x, window_y;
+
+					GetWindowRect(color_screen_windows[i], &rect);
+					window_x = rect.left;
+					window_y = rect.top;
+
+					printf("%d号接任务%d\n", i, j);
+
+					// talk to NPC
+					talk_to_NPC_GJ();
+					if (j == 3) {
+						left_single_click(window_x + 517, window_y + 518);
+					}
+					else{
+						walk_GJ(window_x, window_y);
+					}
+					
+
+					// record time
+					last_finish_time[i] = time(NULL);
+
+					// minimize window
+					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+					Sleep(1000);
+				}
 			}
 
 		}
@@ -420,7 +494,7 @@ void left_single_click(int x, int y) {
 		wait_for_serial_response();
 	} while (strcmp(incomingData, "s") != 0);
 
-	printf("Left single click at [%d, %d]\n", x, y);
+	//printf("Left single click at [%d, %d]\n", x, y);
 
 	Sleep(2000);
 }
@@ -443,7 +517,7 @@ void left_double_click(int x, int y) {
 		wait_for_serial_response();
 	} while (strcmp(incomingData, "d") != 0);
 
-	printf("Left double click at [%d, %d]\n", x, y);
+	//printf("Left double click at [%d, %d]\n", x, y);
 
 	Sleep(2000);
 }
@@ -499,6 +573,23 @@ void answer_question(int selection, int window_x, int window_y) {
 void close_dialog(int window_x, int window_y) {
 	// close dialog
 	left_single_click(window_x + 520, window_y + 517);
+}
+
+void talk_to_NPC_GJ() {
+	char buf[2];
+	sprintf_s(buf, 2, "%c", 't');
+	arduino->writeSerialPort(buf, 1);
+
+	do {
+		wait_for_serial_response();
+	} while (strcmp(incomingData, "t") != 0);
+	// printf("Map opened.\n");
+
+	Sleep(1000);
+}
+
+void walk_GJ(int window_x, int window_y) {
+	left_single_click(window_x + 862, window_y + 337);
 }
 
 int detect_route(HWND hwnd) {

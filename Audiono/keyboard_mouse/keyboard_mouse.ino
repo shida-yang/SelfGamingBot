@@ -1,21 +1,25 @@
+#include "key_map.h"
+
 #define HORIZ_SPEED 0.00162
 #define VERTI_TIME  5500
 #define SPACE_TIME  1500
 
-#define UP    13
-#define DOWN  12
-#define LEFT  11
-#define RIGHT 10
-#define JUMP  9
+#define STROBE    10
+#define PRESSING  11
 
-#define KEY_M 8
+#define UP    KEY_UP
+#define DOWN  KEY_DOWN
+#define LEFT  KEY_LEFT
+#define RIGHT KEY_RIGHT
+#define JUMP  KEY_SPACE
+
 #define PRESS_M  press_key(KEY_M);delay(100);release_key(KEY_M);delay(100)
 
-#define MOUSE_L 7
+#define MOUSE_L 12
 #define LEFT_SINGLE_CLICK digitalWrite(MOUSE_L, LOW);delay(100);digitalWrite(MOUSE_L, HIGH)
 #define LEFT_DOUBLE_CLICK LEFT_SINGLE_CLICK;delay(100);LEFT_SINGLE_CLICK
 
-#define MOUSE_R 6
+#define MOUSE_R 13
 
 #define LEFT_JUMP   100
 #define RIGHT_JUMP  99
@@ -26,9 +30,6 @@
 #define RIGHT_DOWN  95
 
 #define FINISH  0
-
-#define START_BUTTON      2
-#define END_BUTTON        3
 
 typedef struct move_unit{
   int dir;
@@ -45,7 +46,7 @@ extern move_unit_t route_6[];
 
 void press_key(int key);
 void release_key(int key);
-void release_all_keys();
+void press_release_key(int key, int delay_ms);
 
 void move(int dir, float distance);
 void go_to_route(int route);
@@ -59,53 +60,23 @@ volatile byte current_route;
 void setup() {
   Serial.begin(9600);
   
-  pinMode(UP,     OUTPUT);
-  pinMode(DOWN,   OUTPUT);
-  pinMode(LEFT,   OUTPUT);
-  pinMode(RIGHT,  OUTPUT);
-  pinMode(JUMP,   OUTPUT);
-  pinMode(KEY_M,   OUTPUT);
-  pinMode(MOUSE_L,     OUTPUT);
-  pinMode(MOUSE_R,     OUTPUT);
+  DDRD |= B11111100;
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(STROBE, OUTPUT);
+  pinMode(PRESSING, OUTPUT);
 
-  // release the keys
-  digitalWrite(UP, LOW);
-  digitalWrite(DOWN, LOW);
-  digitalWrite(LEFT, LOW);
-  digitalWrite(RIGHT, LOW);
-  digitalWrite(JUMP, LOW);
-  digitalWrite(KEY_M, LOW);
+  pinMode(MOUSE_L, OUTPUT);
+  pinMode(MOUSE_R, OUTPUT);
+
+  digitalWrite(STROBE, LOW);
+  digitalWrite(PRESSING, LOW);
 
   // release mouse buttons
   digitalWrite(MOUSE_L, HIGH);
   digitalWrite(MOUSE_R, HIGH);
 
-  pinMode(START_BUTTON, INPUT_PULLUP);
-  pinMode(END_BUTTON, INPUT_PULLUP);
-
-  attachInterrupt(digitalPinToInterrupt(START_BUTTON), start_isr, FALLING);
-  attachInterrupt(digitalPinToInterrupt(END_BUTTON), end_isr, FALLING);
-
   current_route=1;
-
-//  press_key(UP);
-//  delay(1000);
-//  release_key(UP);
-//  press_key(DOWN);
-//  delay(1000);
-//  release_key(DOWN);
-//  press_key(LEFT);
-//  delay(1000);
-//  release_key(LEFT);
-//  press_key(RIGHT);
-//  delay(1000);
-//  release_key(RIGHT);
-//  press_key(JUMP);
-//  delay(1000);
-//  release_key(JUMP);
-//  PRESS_M;
-//  delay(5000);
-//  PRESS_M;
 }
 
 void loop()                  {
@@ -146,7 +117,14 @@ void loop()                  {
       LEFT_DOUBLE_CLICK;
       Serial.print("d");
     }
-    
+    //官爵对话
+    else if ( serial_data == 't' ){
+      press_release_key(KEY_G, 1000);
+      press_release_key(KEY_ENTER, 1000);
+      press_release_key(KEY_ENTER, 1000);
+      press_release_key(KEY_ENTER, 1000);
+      Serial.print("t");
+    }
     
   }
   
@@ -157,18 +135,31 @@ void loop()                  {
 }
 
 void press_key(int key){
-  digitalWrite(key, HIGH);
+  PORTD = ((key & B111111)<<2) | (PORTD & B11);
+  digitalWrite(8, (key>>6)&1);
+  digitalWrite(9, (key>>7)&1);
+  digitalWrite(PRESSING, HIGH);
+  digitalWrite(STROBE, HIGH);
+  delay(2);
+  digitalWrite(STROBE, LOW);
 }
 
 void release_key(int key){
-  digitalWrite(key, LOW);
+  PORTD = ((key & B111111)<<2) | (PORTD & B11);
+  digitalWrite(8, (key>>6)&1);
+  digitalWrite(9, (key>>7)&1);
+  digitalWrite(PRESSING, LOW);
+  digitalWrite(STROBE, HIGH);
+  delay(2);
+  digitalWrite(STROBE, LOW);
   delay(200);
 }
 
-void release_all_keys(){
-  for(int i=JUMP; i<=UP; i++){
-    release_key(i);
-  }
+void press_release_key(int key, int delay_ms){
+  press_key(key);
+  delay(100);
+  release_key(key);
+  delay(delay_ms);
 }
 
 void move(int dir, float distance){
@@ -338,12 +329,4 @@ void go_to_route(int route){
     move(RIGHT, 25);
   }
   Serial.print("F");
-}
-
-void start_isr(){
-  running_flag=1;
-}
-
-void end_isr(){
-  running_flag=0;
 }
