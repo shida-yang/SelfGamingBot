@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM4";
+const char* portName = "\\\\.\\COM7";
 SerialPort* arduino;
 char incomingData[255];
 
@@ -44,6 +44,19 @@ void search_color_screens();
 
 HWND GetConsoleHwnd(void);
 
+void setColor(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+void red() {
+	setColor(0x04);
+}
+void green() {
+	setColor(0x02);
+}
+void reset() {
+	setColor(0x0F);
+}
+
 HWND color_screen_windows[20];
 bool is_first_time[20];
 bool route_failed[20];
@@ -64,25 +77,34 @@ int main() {
 
 	establish_serial();
 
-	while (1) {   
+	while (1) { 
 
 		cout << "行脚=0" << endl;
 		cout << "推举=1" << endl;
 		cout << "官爵=2" << endl;
+		cout << "打开=3" << endl;
+		cout << "登录=4" << endl;
 		cout << "退出=9" << endl;
 
 		int choice = 0;
-
+                    
 		cout << "Your choice: ";
 		cin >> choice;
 
 		if (choice == 0) {
 
 			int run_times = 0;
+			bool just_once = 0, already_inside = 0;
 
 			cout << "关闭输入法!!!!" << endl;
 			cout << "Enter run times: " << endl;
 			cin >> run_times;
+			if (run_times == 1) {
+				cout << "待在里面吗? " << endl;
+				cin >> just_once;
+				cout << "已经在里面了吗? " << endl;
+				cin >> already_inside;
+			}
 
 			for (int i = 0; i < 20; i++) {
 				is_first_time[i] = 1;
@@ -92,9 +114,10 @@ int main() {
 			}
 
 			search_color_screens();
-
+			         
 			for (int i = 0; i < number_of_screens; i++) {
 				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//ShowWindow(color_screen_windows[i], SW_FORCEMINIMIZE);
 				Sleep(1000);
 			}
 
@@ -131,16 +154,18 @@ int main() {
 					window_x = rect.left;
 					window_y = rect.top;
 
-					printf("Talk to SC.\n");
-					if (is_first_time[i]) {
-						talk_to_NPC_SC(1, window_x, window_y);
-						is_first_time[i] = 0;
-					}
-					else {
-						talk_to_NPC_SC(0, window_x, window_y);
-					}
+					if (!already_inside) {
+						printf("Talk to SC.\n");
+						if (is_first_time[i]) {
+							talk_to_NPC_SC(1, window_x, window_y);
+							is_first_time[i] = 0;
+						}
+						else {
+							talk_to_NPC_SC(0, window_x, window_y);
+						}
 
-					Sleep(2000);
+						Sleep(2000);
+					}
 
 					int route = detect_route(color_screen_windows[i]);
 
@@ -164,7 +189,7 @@ int main() {
 
 					if (get_pixel_color(window_x + 543, window_y + 627) != 4413) {	// D3D9=4413, OpenGL=???
 						route_failed[i] = 1;
-						
+
 						my_time = time(NULL);
 
 						struct tm* tmp = localtime(&my_time);
@@ -176,7 +201,7 @@ int main() {
 
 						continue;
 					}
-
+					
 					printf("Talk to XJS.\n");
 					talk_to_NPC_XJS(window_x, window_y);
 
@@ -189,13 +214,16 @@ int main() {
 					printf("Answer question.\n");
 					answer_question(rand() % 4, window_x, window_y);
 
-					printf("Talk to XJS.\n");
-					talk_to_NPC_XJS(window_x, window_y);
+					if (!just_once) {
+						printf("Talk to XJS.\n");
+						talk_to_NPC_XJS(window_x, window_y);
 
-					Sleep(1000);
+						Sleep(1000);
 
-					printf("Close dialog.\n");
-					close_dialog(window_x, window_y);
+						printf("Close dialog.\n");
+						close_dialog(window_x, window_y);
+					}
+					
 
 					success_time[i]++;
 
@@ -209,7 +237,14 @@ int main() {
 
 			printf("---------- Finish Running ----------\n");
 			for (int i = 0; i < number_of_screens; i++) {
+				if (success_time[i] < run_times) {
+					red();
+				}
+				else {
+					green();
+				}
 				printf("Window %d succeed times: %d\n", i+1, success_time[i]);
+				reset();
 			}
 			printf("------------------------------------\n");
 		}
@@ -373,6 +408,84 @@ int main() {
 
 		}
 
+		if (choice == 3) {
+			int numOfWindows = 0;
+			cout << "开几个？" << endl;
+			cin >> numOfWindows;
+			for (int i = 0; i < numOfWindows; i++) {
+				printf("[%d] Opening Window\n", i + 1);
+				system("\"E:\\QQSG\\QQSG\\QQSG.exe\"");
+				bool opened = false;
+				HWND updaterHWND = NULL;
+
+				while (opened == false) {
+					for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT))
+					{
+
+						if (!IsWindowVisible(hwnd))
+							continue;
+
+						int length = GetWindowTextLength(hwnd);
+						if (length == 0)
+							continue;
+
+						char* title = new char[length + 1];
+						GetWindowTextA(hwnd, title, length + 1);
+
+						if (strcmp(title, "QQ三国自动") == 0) {
+							opened = true;
+							updaterHWND = hwnd;
+						}
+
+					}
+					Sleep(1000);
+				}
+
+				while (opened == true) {
+					opened = false;
+
+					if (SetForegroundWindow(updaterHWND)) {
+						RECT rect;
+						int updaterX, updaterY;
+
+						GetWindowRect(updaterHWND, &rect);
+						updaterX = rect.left;
+						updaterY = rect.top;
+						left_single_click(updaterX + 785, updaterY + 543);
+					}
+
+					for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT))
+					{
+
+						if (!IsWindowVisible(hwnd))
+							continue;
+
+						int length = GetWindowTextLength(hwnd);
+						if (length == 0)
+							continue;
+
+						char* title = new char[length + 1];
+						GetWindowTextA(hwnd, title, length + 1);
+
+						if (strcmp(title, "QQ三国自动") == 0) {
+							opened = true;
+						}
+
+					}
+					Sleep(1000);
+				}
+			}
+			
+		}
+
+		//if (choice == 4) {
+		//	string a = "417645885";
+		//	OpenClipboard(0);
+		//	EmptyClipboard();
+		//	SetClipboardData(CF_TEXT, );
+		//	CloseClipboard();
+		//}
+
 		if (choice == 9) {
 			break;
 		}
@@ -418,7 +531,7 @@ void open_map() {
 	do {
 		wait_for_serial_response();
 	} while (strcmp(incomingData, "O") != 0);
-	printf("Map opened.\n");
+	//printf("Map opened.\n");
 
 	Sleep(1000);
 }
@@ -431,7 +544,7 @@ void close_map() {
 	do {
 		wait_for_serial_response();
 	} while (strcmp(incomingData, "C") != 0);
-	printf("Map closed.\n");
+	//printf("Map closed.\n");
 
 	Sleep(1000);
 }
@@ -601,13 +714,13 @@ int detect_route(HWND hwnd) {
 	window_y = rect.top;
 	
 	// route 5
-	cout << "Checking route 5" << endl;
+	//cout << "Checking route 5" << endl;
 	if (get_pixel_color(window_x + 397, window_y + 354) == 6271542) {	// D3D9=6271542, OpenGL=6271542
 		return 5;
 	}
 
 	// route 6
-	cout << "Checking route 6" << endl;
+	//cout << "Checking route 6" << endl;
 	open_map();
 	if (get_pixel_color(window_x + 177, window_y + 154) != 6396083) {	// D3D9=6396083, OpenGL=6509158
 		close_map();
@@ -618,7 +731,7 @@ int detect_route(HWND hwnd) {
 
 	// route 1 or 4
 	if (get_pixel_color(window_x + 609, window_y + 492) == 6509157) {	// D3D9=6509157, OpenGL=6509158
-		cout << "Checking route 1 or 4" << endl;
+		//cout << "Checking route 1 or 4" << endl;
 		open_map();
 		// route 4
 		if (get_pixel_color(window_x + 472, window_y + 588) == 5672876) {	// D3D9=5672876, OpenGL=5672876
@@ -633,7 +746,7 @@ int detect_route(HWND hwnd) {
 	}
 	// route 2 or 3
 	else {
-		cout << "Checking route 2 or 3" << endl;
+		//cout << "Checking route 2 or 3" << endl;
 		open_map();
 		// route 3
 		if (get_pixel_color(window_x + 475, window_y + 594) == 4155526) {	// D3D9=4155526, OpenGL=3826564

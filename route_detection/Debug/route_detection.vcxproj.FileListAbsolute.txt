@@ -1,4 +1,0 @@
-E:\Visual Studio Projects\route_detection\Debug\route_detection.exe
-E:\Visual Studio Projects\route_detection\Debug\route_detection.pdb
-E:\Free_Time_Projects\QQSG Route detection\route_detection\Debug\route_detection.exe
-E:\Free_Time_Projects\QQSG Route detection\route_detection\Debug\route_detection.pdb
