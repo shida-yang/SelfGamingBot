@@ -1,4 +1,6 @@
-#include "key_map.h"
+//#include "key_map.h"
+#include <Keyboard.h>
+#include <Mouse.h>
 
 #define HORIZ_SPEED 0.00162
 #define VERTI_TIME  5500
@@ -7,19 +9,19 @@
 #define STROBE    10
 #define PRESSING  11
 
-#define UP    KEY_UP
-#define DOWN  KEY_DOWN
-#define LEFT  KEY_LEFT
-#define RIGHT KEY_RIGHT
-#define JUMP  KEY_SPACE
+#define UP    KEY_UP_ARROW
+#define DOWN  KEY_DOWN_ARROW
+#define LEFT  KEY_LEFT_ARROW
+#define RIGHT KEY_RIGHT_ARROW
+#define JUMP  32
 
-#define PRESS_M  press_key(KEY_M);delay(100);release_key(KEY_M);delay(100)
+#define PRESS_M  press_key('M');delay(100);release_key('M');delay(100)
 
-#define MOUSE_L 12
-#define LEFT_SINGLE_CLICK digitalWrite(MOUSE_L, LOW);delay(100);digitalWrite(MOUSE_L, HIGH)
+//#define MOUSE_L 12
+#define LEFT_SINGLE_CLICK Mouse.click()
 #define LEFT_DOUBLE_CLICK LEFT_SINGLE_CLICK;delay(100);LEFT_SINGLE_CLICK
 
-#define MOUSE_R 13
+//#define MOUSE_R 13
 
 #define LEFT_JUMP   100
 #define RIGHT_JUMP  99
@@ -66,15 +68,15 @@ void setup() {
   pinMode(STROBE, OUTPUT);
   pinMode(PRESSING, OUTPUT);
 
-  pinMode(MOUSE_L, OUTPUT);
-  pinMode(MOUSE_R, OUTPUT);
+//  pinMode(MOUSE_L, OUTPUT);
+//  pinMode(MOUSE_R, OUTPUT);
 
   digitalWrite(STROBE, LOW);
   digitalWrite(PRESSING, LOW);
 
   // release mouse buttons
-  digitalWrite(MOUSE_L, HIGH);
-  digitalWrite(MOUSE_R, HIGH);
+//  digitalWrite(MOUSE_L, HIGH);
+//  digitalWrite(MOUSE_R, HIGH);
 
   current_route=1;
 }
@@ -119,11 +121,16 @@ void loop()                  {
     }
     //官爵对话
     else if ( serial_data == 't' ){
-      press_release_key(KEY_G, 1000);
-      press_release_key(KEY_ENTER, 1000);
-      press_release_key(KEY_ENTER, 1000);
-      press_release_key(KEY_ENTER, 1000);
+      press_release_key('G', 1000);
+      press_release_key(KEY_RETURN, 1000);
+      press_release_key(KEY_RETURN, 1000);
+      press_release_key(KEY_RETURN, 1000);
       Serial.print("t");
+    }
+    else if ( serial_data == 'h' ) {
+      press_release_key(KEY_F11, 500);
+      press_release_key(KEY_F11, 500);
+      Serial.print("h");
     }
     
   }
@@ -135,24 +142,11 @@ void loop()                  {
 }
 
 void press_key(int key){
-  PORTD = ((key & B111111)<<2) | (PORTD & B11);
-  digitalWrite(8, (key>>6)&1);
-  digitalWrite(9, (key>>7)&1);
-  digitalWrite(PRESSING, HIGH);
-  digitalWrite(STROBE, HIGH);
-  delay(2);
-  digitalWrite(STROBE, LOW);
+  Keyboard.press(key);
 }
 
 void release_key(int key){
-  PORTD = ((key & B111111)<<2) | (PORTD & B11);
-  digitalWrite(8, (key>>6)&1);
-  digitalWrite(9, (key>>7)&1);
-  digitalWrite(PRESSING, LOW);
-  digitalWrite(STROBE, HIGH);
-  delay(2);
-  digitalWrite(STROBE, LOW);
-  delay(200);
+  Keyboard.release(key);
 }
 
 void press_release_key(int key, int delay_ms){

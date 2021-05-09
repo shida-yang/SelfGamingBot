@@ -222,6 +222,14 @@ int main() {
 
 						printf("Close dialog.\n");
 						close_dialog(window_x, window_y);
+
+						char buf[2];
+						sprintf_s(buf, 2, "%c", 'h');
+						arduino->writeSerialPort(buf, 1);
+
+						do {
+							wait_for_serial_response();
+						} while (strcmp(incomingData, "h") != 0);
 					}
 					
 
