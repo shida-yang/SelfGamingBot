@@ -1,4 +1,4 @@
-//#include "key_map.h"
+ //#include "key_map.h"
 #include <Keyboard.h>
 #include <Mouse.h>
 
@@ -182,6 +182,7 @@ void move(int dir, float distance){
       press_key(JUMP);
       delay(SPACE_TIME);
       release_key(JUMP);
+      delay(100);
       return;
     break;
     case RIGHT_JUMP:
@@ -196,6 +197,7 @@ void move(int dir, float distance){
       press_key(JUMP);
       delay(SPACE_TIME);
       release_key(JUMP);
+      delay(100);
       return;
     break;
     case LEFT_UP:
@@ -205,6 +207,7 @@ void move(int dir, float distance){
       delay(press_time);
       release_key(LEFT);
       release_key(UP);
+      delay(100);
     break;
     case RIGHT_UP:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -213,6 +216,7 @@ void move(int dir, float distance){
       delay(press_time);
       release_key(RIGHT);
       release_key(UP);
+      delay(100);
     break;
     case LEFT_DOWN:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -221,6 +225,7 @@ void move(int dir, float distance){
       delay(press_time);
       release_key(LEFT);
       release_key(DOWN);
+      delay(100);
     break;
     case RIGHT_DOWN:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -229,11 +234,13 @@ void move(int dir, float distance){
       delay(press_time);
       release_key(RIGHT);
       release_key(DOWN);
+      delay(100);
     break;
   }
   press_key(dir);
   delay(press_time);
   release_key(dir);
+  delay(200);
 }
 
 void go_to_route(int route){

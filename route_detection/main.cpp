@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM7";
+const char* portName = "\\\\.\\COM10";
 SerialPort* arduino;
 char incomingData[255];
 
