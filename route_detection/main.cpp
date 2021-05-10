@@ -12,6 +12,10 @@
 #include "config.h"
 //#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
 //#define COM_PORT	"\\\\.\\COM10"
+//std::vector<std::string> qq_pwd = {
+//	"QQ1-PWD1-",
+//	"QQ2-PWD2-"
+//};
 
 using namespace std;
 
