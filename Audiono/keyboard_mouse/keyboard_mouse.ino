@@ -149,7 +149,39 @@ void loop(){
       press_release_key(KEY_F11, 500);
       Serial.print("h");
     }
-    
+    else if ( serial_data == 'L' ) {
+      Serial.print("L");
+      String qq = "";
+      String pwd = "";
+      bool filling_qq = true;
+      while(1){
+        if (Serial.available() > 0){
+          char login_data = Serial.read();
+          if(login_data == '-'){
+            if(filling_qq){
+              filling_qq = false;
+            }
+            else{
+              break;
+            }
+          }
+          else{
+            if(filling_qq){
+              qq+=login_data;
+            }
+            else{
+              pwd+=login_data;
+            }
+          }
+        }
+      }
+      Keyboard.print(qq);
+      press_release_key(KEY_TAB, 500);
+      Keyboard.print(pwd);
+      delay(500);
+      press_release_key(KEY_RETURN, 1000);
+      Serial.print("L");
+    }
   }
   
   if(running_flag){
