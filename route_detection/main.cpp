@@ -9,10 +9,17 @@
 #include <time.h> 
 
 #include "SerialPort.hpp"
+#include "config.h"
+//#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
+//#define COM_PORT	"\\\\.\\COM10"
+//std::vector<std::string> qq_pwd = {
+//	"QQ1-PWD1-",
+//	"QQ2-PWD2-"
+//};
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM7";
+const char* portName = COM_PORT;
 SerialPort* arduino;
 char incomingData[255];
 
@@ -222,6 +229,14 @@ int main() {
 
 						printf("Close dialog.\n");
 						close_dialog(window_x, window_y);
+
+						char buf[2];
+						sprintf_s(buf, 2, "%c", 'h');
+						arduino->writeSerialPort(buf, 1);
+
+						do {
+							wait_for_serial_response();
+						} while (strcmp(incomingData, "h") != 0);
 					}
 					
 
@@ -414,7 +429,7 @@ int main() {
 			cin >> numOfWindows;
 			for (int i = 0; i < numOfWindows; i++) {
 				printf("[%d] Opening Window\n", i + 1);
-				system("\"E:\\QQSG\\QQSG\\QQSG.exe\"");
+				system(GAME_ADDR);
 				bool opened = false;
 				HWND updaterHWND = NULL;
 
@@ -443,7 +458,6 @@ int main() {
 
 				while (opened == true) {
 					opened = false;
-
 					if (SetForegroundWindow(updaterHWND)) {
 						RECT rect;
 						int updaterX, updaterY;
@@ -478,13 +492,57 @@ int main() {
 			
 		}
 
-		//if (choice == 4) {
-		//	string a = "417645885";
-		//	OpenClipboard(0);
-		//	EmptyClipboard();
-		//	SetClipboardData(CF_TEXT, );
-		//	CloseClipboard();
-		//}
+		if (choice == 4) {
+			search_color_screens();
+
+			for (int i = 0; i < number_of_screens; i++) {
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+			for (int i = 0; i < number_of_screens && i<qq_pwd.size(); i++) {
+				printf("[%d] Logging in...\n", i);
+
+				// restore window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_RESTORE, 0);
+				Sleep(1000);
+				SetForegroundWindow(color_screen_windows[i]);
+				Sleep(1000);
+
+				//Get window location
+				RECT rect;
+				int window_x, window_y;
+
+				GetWindowRect(color_screen_windows[i], &rect);
+				window_x = rect.left;
+				window_y = rect.top;
+
+				// clear qq field
+				left_single_click(window_x + 508, window_y + 400);
+				Sleep(1000);
+				left_double_click(window_x + 508, window_y + 400);
+
+				char buf[2];
+				sprintf_s(buf, 2, "%c", 'L');
+				arduino->writeSerialPort(buf, 1);
+
+				do {
+					wait_for_serial_response();
+				} while (strcmp(incomingData, "L") != 0);
+
+				char* qq_pwd_buf = &qq_pwd[i][0];
+				arduino->writeSerialPort(qq_pwd_buf, qq_pwd[i].length());
+
+				do {
+					wait_for_serial_response();
+				} while (strcmp(incomingData, "L") != 0);
+
+				// minimize window
+				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				Sleep(1000);
+			}
+
+		}
 
 		if (choice == 9) {
 			break;
@@ -749,7 +807,7 @@ int detect_route(HWND hwnd) {
 		//cout << "Checking route 2 or 3" << endl;
 		open_map();
 		// route 3
-		if (get_pixel_color(window_x + 475, window_y + 594) == 4155526) {	// D3D9=4155526, OpenGL=3826564
+		if (get_pixel_color(window_x + 475, window_y + 594) == 4155270) {	// D3D9=4155526, OpenGL=3826564
 			close_map();
 			return 3;
 		}
