@@ -10,6 +10,8 @@
 
 #include "SerialPort.hpp"
 #include "config.h"
+//#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
+//#define COM_PORT	"\\\\.\\COM10"
 
 using namespace std;
 
