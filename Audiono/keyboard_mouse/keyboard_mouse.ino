@@ -79,9 +79,26 @@ void setup() {
 //  digitalWrite(MOUSE_R, HIGH);
 
   current_route=1;
+
+  Keyboard.begin();
+  delay(1000);
+
+//  press_key(UP);
+//  press_key(LEFT);
+//  delay(1000);
+//  release_key(LEFT);
+//  release_key(UP);
+//  delay(100);
+//  press_key(UP);
+//  delay(5000);
+//  release_key(UP);
+//
+//  press_key('a');
+//  delay(1000);
+//  release_key('a');
 }
 
-void loop()                  {
+void loop(){
   if (Serial.available() > 0) {
     // read the incoming byte:
     int serial_data = Serial.read();
@@ -208,6 +225,7 @@ void move(int dir, float distance){
       release_key(LEFT);
       release_key(UP);
       delay(100);
+      return;
     break;
     case RIGHT_UP:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -217,6 +235,7 @@ void move(int dir, float distance){
       release_key(RIGHT);
       release_key(UP);
       delay(100);
+      return;
     break;
     case LEFT_DOWN:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -226,6 +245,7 @@ void move(int dir, float distance){
       release_key(LEFT);
       release_key(DOWN);
       delay(100);
+      return;
     break;
     case RIGHT_DOWN:
       press_time=(int)(distance/HORIZ_SPEED);
@@ -235,6 +255,7 @@ void move(int dir, float distance){
       release_key(RIGHT);
       release_key(DOWN);
       delay(100);
+      return;
     break;
   }
   press_key(dir);

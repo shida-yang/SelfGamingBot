@@ -108,20 +108,15 @@ move_unit_t route_2[] = {
 };
 
 move_unit_t route_3[] = {
-//  { RIGHT, 8 },
   {RIGHT_UP, 8.5},
   { UP, 0 },
-//  { RIGHT, 3.3 },
   {RIGHT_UP, 4},
   { UP, 0 },
-//  { LEFT, 0.5 },
   {LEFT_UP, 1},
   { UP, 0 },
   { RIGHT, 2 }, //avoid going back down
-//  { RIGHT, 4 },
   {RIGHT_DOWN, 2.5 },
   { DOWN, 0 },
-//  { RIGHT, 0.5 },
   {RIGHT_DOWN, 1 },
   { DOWN, 0 },
   { UP, 0 },

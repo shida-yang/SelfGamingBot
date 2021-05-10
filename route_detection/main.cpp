@@ -9,10 +9,11 @@
 #include <time.h> 
 
 #include "SerialPort.hpp"
+#include "config.h"
 
 using namespace std;
 
-const char* portName = "\\\\.\\COM10";
+const char* portName = COM_PORT;
 SerialPort* arduino;
 char incomingData[255];
 
@@ -422,7 +423,7 @@ int main() {
 			cin >> numOfWindows;
 			for (int i = 0; i < numOfWindows; i++) {
 				printf("[%d] Opening Window\n", i + 1);
-				system("\"E:\\QQSG\\QQSG\\QQSG.exe\"");
+				system(GAME_ADDR);
 				bool opened = false;
 				HWND updaterHWND = NULL;
 
