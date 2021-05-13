@@ -146,6 +146,9 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="SerialPort.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Debug\qq_pwds.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

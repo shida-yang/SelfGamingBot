@@ -7,18 +7,22 @@
 #include <stdio.h>
 #include <random>
 #include <time.h> 
+#include <fstream>
 
 #include "SerialPort.hpp"
-#include "config.h"
+#include "config.h"		// put this in your project root folder
 //#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
 //#define COM_PORT	"\\\\.\\COM10"
 //#define ROUTE3_CONST 4155270
-//std::vector<std::string> qq_pwd = {
-//	"QQ1-PWD1-",
-//	"QQ2-PWD2-"
-//};
+
+#define QQ_PWD_TXT "qq_pwds.txt" // put this file in the Debug folder
+// QQ1-PWD1-
+// QQ2-PWD2-
+// ...
 
 using namespace std;
+
+std::vector<std::string> qq_pwd;
 
 const char* portName = COM_PORT;
 SerialPort* arduino;
@@ -92,6 +96,27 @@ void min_window(HWND hwnd) {
 	window_y = rect.top;
 
 	left_single_click(window_x + 913, window_y + 14);
+}
+
+bool read_qq_pwds() {
+	string line;
+	ifstream myfile(QQ_PWD_TXT);
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			qq_pwd.push_back(line);
+		}
+		myfile.close();
+		return true;
+	}
+
+	else {
+		red();
+		cout << "Unable to open " << QQ_PWD_TXT << endl;
+		reset();
+		return false;
+	}
 }
 
 int main() {
@@ -526,6 +551,9 @@ int main() {
 
 		if (choice == 4) {
 			search_color_screens();
+			if (!read_qq_pwds()) {
+				continue;
+			}
 
 			for (int i = 0; i < number_of_screens; i++) {
 				min_window(color_screen_windows[i]);
