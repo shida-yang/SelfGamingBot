@@ -64,6 +64,8 @@ void reset() {
 	setColor(0x0F);
 }
 
+
+
 HWND color_screen_windows[20];
 bool is_first_time[20];
 bool route_failed[20];
@@ -77,6 +79,19 @@ int number_of_screens;
 HWND console_window;
 
 HWND curr_game_window;
+
+void min_window(HWND hwnd) {
+	curr_game_window = hwnd;
+	
+	RECT rect;
+	int window_x, window_y;
+
+	GetWindowRect(hwnd, &rect);
+	window_x = rect.left;
+	window_y = rect.top;
+
+	left_single_click(window_x + 913, window_y + 14);
+}
 
 int main() {
 
@@ -123,9 +138,10 @@ int main() {
 			search_color_screens();
 			         
 			for (int i = 0; i < number_of_screens; i++) {
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				//ShowWindow(color_screen_windows[i], SW_FORCEMINIMIZE);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//ShowWindow(color_screen_windows[i], SW_SHOWMINNOACTIVE);
+				//Sleep(1000);
 			}
 
 			for (int j = 0; j < run_times; j++) {
@@ -203,8 +219,9 @@ int main() {
 
 						printf("[%02d:%02d:%02d] Route failed.\n", tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
 
-						PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-						Sleep(1000);
+						min_window(color_screen_windows[i]);
+						//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+						//Sleep(1000);
 
 						continue;
 					}
@@ -244,8 +261,9 @@ int main() {
 
 					last_finish_time[i] = time(NULL);
 
-					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-					Sleep(1000);
+					min_window(color_screen_windows[i]);
+					//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+					//Sleep(1000);
 				}
 
 			}
@@ -276,8 +294,9 @@ int main() {
 
 			// Minimize all the windows
 			for (int i = 0; i < number_of_screens; i++) {
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 			// Open each window in order
@@ -288,6 +307,8 @@ int main() {
 				Sleep(1000);
 				SetForegroundWindow(color_screen_windows[i]);
 				Sleep(1000);
+
+				curr_game_window = color_screen_windows[i];
 
 				//Get window location
 				RECT rect;
@@ -317,8 +338,9 @@ int main() {
 				last_finish_time[i] = time(NULL);
 
 				// minimize window
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 			for (int i = 0; i < number_of_screens; i++) {
@@ -327,6 +349,8 @@ int main() {
 				Sleep(1000);
 				SetForegroundWindow(color_screen_windows[i]);
 				Sleep(1000);
+
+				curr_game_window = color_screen_windows[i];
 
 				printf("%d号交任务\n", i);
 
@@ -352,8 +376,9 @@ int main() {
 				left_single_click(window_x + 517, window_y + 518);
 
 				// minimize window
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 		}
@@ -365,8 +390,9 @@ int main() {
 
 			// Minimize all the windows
 			for (int i = 0; i < number_of_screens; i++) {
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 			// clear last finish time
@@ -392,6 +418,8 @@ int main() {
 					SetForegroundWindow(color_screen_windows[i]);
 					Sleep(1000);
 
+					curr_game_window = color_screen_windows[i];
+
 					//Get window location
 					RECT rect;
 					int window_x, window_y;
@@ -416,8 +444,9 @@ int main() {
 					last_finish_time[i] = time(NULL);
 
 					// minimize window
-					PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-					Sleep(1000);
+					min_window(color_screen_windows[i]);
+					//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+					//Sleep(1000);
 				}
 			}
 
@@ -465,6 +494,7 @@ int main() {
 						GetWindowRect(updaterHWND, &rect);
 						updaterX = rect.left;
 						updaterY = rect.top;
+						curr_game_window = updaterHWND;
 						left_single_click(updaterX + 785, updaterY + 543);
 					}
 
@@ -483,6 +513,7 @@ int main() {
 
 						if (strcmp(title, "QQ三国自动") == 0) {
 							opened = true;
+							updaterHWND = hwnd;
 						}
 
 					}
@@ -496,8 +527,9 @@ int main() {
 			search_color_screens();
 
 			for (int i = 0; i < number_of_screens; i++) {
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 			for (int i = 0; i < number_of_screens && i<qq_pwd.size(); i++) {
@@ -508,6 +540,8 @@ int main() {
 				Sleep(1000);
 				SetForegroundWindow(color_screen_windows[i]);
 				Sleep(1000);
+
+				curr_game_window = color_screen_windows[i];
 
 				//Get window location
 				RECT rect;
@@ -538,8 +572,9 @@ int main() {
 				} while (strcmp(incomingData, "L") != 0);
 
 				// minimize window
-				PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				Sleep(1000);
+				min_window(color_screen_windows[i]);
+				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				//Sleep(1000);
 			}
 
 		}
@@ -649,13 +684,13 @@ void move_mouse(int x, int y) {
 
 void left_single_click(int x, int y) {
 	SetForegroundWindow(console_window);
-	Sleep(700);
+	Sleep(500);
 
 	move_mouse(x, y);
 
 	SetForegroundWindow(curr_game_window);
 
-	Sleep(700);
+	Sleep(500);
 
 	char buf[2];
 	sprintf_s(buf, 2, "%c", 's');
@@ -672,13 +707,13 @@ void left_single_click(int x, int y) {
 
 void left_double_click(int x, int y) {
 	SetForegroundWindow(console_window);
-	Sleep(700);
+	Sleep(500);
 
 	move_mouse(x, y);
 
 	SetForegroundWindow(curr_game_window);
 	
-	Sleep(700);
+	Sleep(500);
 
 	char buf[2];
 	sprintf_s(buf, 2, "%c", 'd');
@@ -807,7 +842,7 @@ int detect_route(HWND hwnd) {
 		//cout << "Checking route 2 or 3" << endl;
 		open_map();
 		// route 3
-		if (get_pixel_color(window_x + 475, window_y + 594) == 4155270) {	// D3D9=4155526, OpenGL=3826564
+		if (get_pixel_color(window_x + 475, window_y + 594) == 4155526) {	// D3D9=4155526, OpenGL=3826564
 			close_map();
 			return 3;
 		}
