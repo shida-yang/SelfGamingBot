@@ -101,12 +101,19 @@ void min_window(HWND hwnd) {
 bool read_qq_pwds() {
 	string line;
 	ifstream myfile(QQ_PWD_TXT);
+	qq_pwd.clear();
 	if (myfile.is_open())
 	{
 		while (getline(myfile, line))
 		{
+			if (line=="x") {
+				break;
+			}
 			qq_pwd.push_back(line);
 		}
+		green();
+		cout << qq_pwd.size() << " accounts found!" << endl;
+		reset();
 		myfile.close();
 		return true;
 	}
@@ -551,6 +558,7 @@ int main() {
 
 		if (choice == 4) {
 			search_color_screens();
+
 			if (!read_qq_pwds()) {
 				continue;
 			}
