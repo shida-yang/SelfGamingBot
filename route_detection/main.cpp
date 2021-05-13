@@ -12,6 +12,7 @@
 #include "config.h"
 //#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
 //#define COM_PORT	"\\\\.\\COM10"
+//#define ROUTE3_CONST 4155270
 //std::vector<std::string> qq_pwd = {
 //	"QQ1-PWD1-",
 //	"QQ2-PWD2-"
@@ -842,7 +843,7 @@ int detect_route(HWND hwnd) {
 		//cout << "Checking route 2 or 3" << endl;
 		open_map();
 		// route 3
-		if (get_pixel_color(window_x + 475, window_y + 594) == 4155526) {	// D3D9=4155526, OpenGL=3826564
+		if (get_pixel_color(window_x + 475, window_y + 594) == ROUTE3_CONST) {	// D3D9=4155526, OpenGL=3826564
 			close_map();
 			return 3;
 		}
