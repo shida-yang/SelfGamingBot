@@ -563,6 +563,14 @@ int main() {
 				continue;
 			}
 
+			cout << "Continue?" << endl;
+			int cont_login;
+			cin >> cont_login;
+
+			if (cont_login == 0) {
+				continue;
+			}
+
 			for (int i = 0; i < number_of_screens; i++) {
 				min_window(color_screen_windows[i]);
 				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
