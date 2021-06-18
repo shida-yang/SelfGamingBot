@@ -19,6 +19,7 @@
 // QQ1-PWD1-
 // QQ2-PWD2-
 // ...
+// x
 
 using namespace std;
 
@@ -775,12 +776,14 @@ void left_double_click(int x, int y) {
 
 void talk_to_NPC_SC(bool first_time, int window_x, int window_y) {
 	// talk to NPC_SC
-	if (first_time) {
-		left_double_click(window_x + 456, window_y + 532);
-	}
-	else {
-		left_double_click(window_x + 397, window_y + 522);
-	}
+	char buf[2];
+	sprintf_s(buf, 2, "%c", 'g');
+	arduino->writeSerialPort(buf, 1);
+
+	do {
+		wait_for_serial_response();
+	} while (strcmp(incomingData, "g") != 0);
+
 	left_single_click(window_x + 507, window_y + 344);
 	left_single_click(window_x + 507, window_y + 344);
 	left_single_click(window_x + 504, window_y + 291);
@@ -788,7 +791,14 @@ void talk_to_NPC_SC(bool first_time, int window_x, int window_y) {
 
 void talk_to_NPC_XJS(int window_x, int window_y) {
 	// talk to NPC_XJS
-	left_double_click(window_x + 740, window_y + 551);
+	char buf[2];
+	sprintf_s(buf, 2, "%c", 'g');
+	arduino->writeSerialPort(buf, 1);
+
+	do {
+		wait_for_serial_response();
+	} while (strcmp(incomingData, "g") != 0);
+
 	left_single_click(window_x + 740, window_y + 551);
 	left_single_click(window_x + 508, window_y + 289);
 }

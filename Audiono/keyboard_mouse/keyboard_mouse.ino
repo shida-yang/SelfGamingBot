@@ -136,6 +136,11 @@ void loop(){
       LEFT_DOUBLE_CLICK;
       Serial.print("d");
     }
+    //talk
+    else if ( serial_data == 'g' ){
+      press_release_key('G', 1000);
+      Serial.print("g");
+    }
     //官爵对话
     else if ( serial_data == 't' ){
       press_release_key('G', 1000);
