@@ -722,17 +722,17 @@ bool sendMail() {
 		buffer << "Route Detection: " << COMPUTER_NAME;
 		mail.SetSenderName(buffer.str().c_str());
 		mail.SetSubject(buffer.str().c_str());
-		buffer.flush();
-		//mail.SetSenderMail("user@domain.com");
-		//mail.SetReplyTo("user@domain.com");
+		buffer.str("");
+		mail.SetSenderMail(EMAIL_LOGIN_USERNAME);
+		mail.SetReplyTo(EMAIL_LOGIN_USERNAME);
 		mail.AddRecipient("shidayang@ufl.edu");
-		//mail.SetXPriority(XPRIORITY_NORMAL);
-		//mail.SetXMailer("The Bat! (v3.02) Professional");
+		mail.SetXPriority(XPRIORITY_NORMAL);
+		mail.SetXMailer("The Bat! (v3.02) Professional");
 
 		for (int i = 0; i < number_of_screens; i++) {
 			buffer << "Window" << i + 1 << "succeed times: " << success_time[i];
 			mail.AddMsgLine(buffer.str().c_str());
-			buffer.flush();
+			buffer.str("");
 		}
 		mail.Send();
 	}
