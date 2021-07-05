@@ -1,5 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "CSmtp.h"
+#define stdin  (__acrt_iob_func(0))
+#define stdout (__acrt_iob_func(1))
+#define stderr (__acrt_iob_func(2))
+FILE _iob[] = { *stdin, *stdout, *stderr };
+extern "C" FILE * __cdecl __iob_func(void) { return _iob; }
+CSmtp mail;
+
 #include <iostream>
 #include <Windows.h>
 #include <string>
@@ -8,12 +16,16 @@
 #include <random>
 #include <time.h> 
 #include <fstream>
+#include <sstream>
 
 #include "SerialPort.hpp"
 #include "config.h"		// put this in your project root folder
 //#define GAME_ADDR	"\"E:\\QQSG\\QQSG\\QQSG.exe\""
 //#define COM_PORT	"\\\\.\\COM10"
 //#define ROUTE3_CONST 4155270
+//#define COMPUTER_NAME "Ryzen 3700x"
+//#define EMAIL_LOGIN_USERNAME	"*****"
+//#define EMAIL_LOGIN_PWD		"*****"
 
 #define QQ_PWD_TXT "qq_pwds.txt" // put this file in the Debug folder
 // QQ1-PWD1-
@@ -56,6 +68,9 @@ uint32_t get_pixel_color(int x, int y);
 void search_color_screens();
 
 HWND GetConsoleHwnd(void);
+
+void initMail();
+bool sendMail();
 
 void setColor(int color) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
@@ -324,6 +339,7 @@ int main() {
 				reset();
 			}
 			printf("------------------------------------\n");
+			sendMail();
 		}
 
 		if (choice == 1) {
@@ -637,6 +653,102 @@ int main() {
 		
 
 	}
+}
+
+void initMail() {
+	bool bError = false;
+
+	try
+	{
+		
+#define test_gmail_tls
+
+#if defined(test_gmail_tls)
+		mail.SetSMTPServer("smtp.gmail.com", 587);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_gmail_ssl)
+		mail.SetSMTPServer("smtp.gmail.com", 465);
+		mail.SetSecurityType(USE_SSL);
+#elif defined(test_hotmail_TLS)
+		mail.SetSMTPServer("smtp.live.com", 25);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_aol_tls)
+		mail.SetSMTPServer("smtp.aol.com", 587);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_yahoo_ssl)
+		mail.SetSMTPServer("plus.smtp.mail.yahoo.com", 465);
+		mail.SetSecurityType(USE_SSL);
+#endif
+	}
+	catch (ECSmtp e)
+	{
+		std::cout << "Error: " << e.GetErrorText().c_str() << ".\n";
+		bError = true;
+	}
+	if (!bError)
+		std::cout << "Mail was initialized successfully.\n";
+}
+
+bool sendMail() {
+	bool bError = false;
+
+	try
+	{
+
+#define test_gmail_tls
+
+#if defined(test_gmail_tls)
+		mail.SetSMTPServer("smtp.gmail.com", 587);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_gmail_ssl)
+		mail.SetSMTPServer("smtp.gmail.com", 465);
+		mail.SetSecurityType(USE_SSL);
+#elif defined(test_hotmail_TLS)
+		mail.SetSMTPServer("smtp.live.com", 25);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_aol_tls)
+		mail.SetSMTPServer("smtp.aol.com", 587);
+		mail.SetSecurityType(USE_TLS);
+#elif defined(test_yahoo_ssl)
+		mail.SetSMTPServer("plus.smtp.mail.yahoo.com", 465);
+		mail.SetSecurityType(USE_SSL);
+#endif
+		ostringstream buffer;
+
+		mail.SetLogin(EMAIL_LOGIN_USERNAME);
+		mail.SetPassword(EMAIL_LOGIN_PWD);
+		string computer_name = COMPUTER_NAME;
+		// formatting subject
+		buffer << "Route Detection: " << COMPUTER_NAME;
+		mail.SetSenderName(buffer.str().c_str());
+		mail.SetSubject(buffer.str().c_str());
+		buffer.flush();
+		//mail.SetSenderMail("user@domain.com");
+		//mail.SetReplyTo("user@domain.com");
+		mail.AddRecipient("shidayang@ufl.edu");
+		//mail.SetXPriority(XPRIORITY_NORMAL);
+		//mail.SetXMailer("The Bat! (v3.02) Professional");
+
+		for (int i = 0; i < number_of_screens; i++) {
+			buffer << "Window" << i + 1 << "succeed times: " << success_time[i];
+			mail.AddMsgLine(buffer.str().c_str());
+			buffer.flush();
+		}
+		mail.Send();
+	}
+	catch (ECSmtp e)
+	{
+		std::cout << "Error: " << e.GetErrorText().c_str() << ".\n";
+		bError = true;
+	}
+	if (!bError) {
+		std::cout << "Mail was send successfully.\n";
+		return true;
+	}
+	else {
+		return false;
+	}
+		
 }
 
 void establish_serial() {
