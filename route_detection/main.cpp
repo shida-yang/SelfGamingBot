@@ -433,11 +433,9 @@ int main() {
 			search_color_screens();
 
 			// Minimize all the windows
-			for (int i = 0; i < number_of_screens; i++) {
-				min_window(color_screen_windows[i]);
-				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				//Sleep(1000);
-			}
+			//for (int i = 0; i < number_of_screens; i++) {
+			//	min_window(color_screen_windows[i]);
+			//}
 
 			// clear last finish time
 			for (int i = 0; i < number_of_screens; i++) {
