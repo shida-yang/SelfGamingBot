@@ -447,9 +447,9 @@ int main() {
 			search_color_screens();
 
 			// Minimize all the windows
-			//for (int i = 0; i < number_of_screens; i++) {
-			//	min_window(color_screen_windows[i]);
-			//}
+			for (int i = 0; i < number_of_screens; i++) {
+				min_window(color_screen_windows[i]);
+			}
 
 			// clear last finish time
 			for (int i = 0; i < number_of_screens; i++) {
