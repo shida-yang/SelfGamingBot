@@ -6,7 +6,6 @@
 #define stderr (__acrt_iob_func(2))
 FILE _iob[] = { *stdin, *stdout, *stderr };
 extern "C" FILE * __cdecl __iob_func(void) { return _iob; }
-CSmtp mail;
 
 #include <iostream>
 #include <Windows.h>
@@ -69,7 +68,6 @@ void search_color_screens();
 
 HWND GetConsoleHwnd(void);
 
-void initMail();
 bool sendMail();
 
 void setColor(int color) {
@@ -655,41 +653,9 @@ int main() {
 	}
 }
 
-void initMail() {
-	bool bError = false;
-
-	try
-	{
-		
-#define test_gmail_tls
-
-#if defined(test_gmail_tls)
-		mail.SetSMTPServer("smtp.gmail.com", 587);
-		mail.SetSecurityType(USE_TLS);
-#elif defined(test_gmail_ssl)
-		mail.SetSMTPServer("smtp.gmail.com", 465);
-		mail.SetSecurityType(USE_SSL);
-#elif defined(test_hotmail_TLS)
-		mail.SetSMTPServer("smtp.live.com", 25);
-		mail.SetSecurityType(USE_TLS);
-#elif defined(test_aol_tls)
-		mail.SetSMTPServer("smtp.aol.com", 587);
-		mail.SetSecurityType(USE_TLS);
-#elif defined(test_yahoo_ssl)
-		mail.SetSMTPServer("plus.smtp.mail.yahoo.com", 465);
-		mail.SetSecurityType(USE_SSL);
-#endif
-	}
-	catch (ECSmtp e)
-	{
-		std::cout << "Error: " << e.GetErrorText().c_str() << ".\n";
-		bError = true;
-	}
-	if (!bError)
-		std::cout << "Mail was initialized successfully.\n";
-}
-
 bool sendMail() {
+	CSmtp mail;
+
 	bool bError = false;
 
 	try
