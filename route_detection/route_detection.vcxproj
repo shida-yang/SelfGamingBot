@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\SelfGamingBot\route_detection\openssl-0.9.8l\out32;D:\SelfGamingBot\route_detection\openssl-0.9.8l\inc32;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SelfGamingBot\route_detection\openssl-0.9.8l\out32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\openssl-0.9.8l\inc32;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\openssl-0.9.8l\out32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
