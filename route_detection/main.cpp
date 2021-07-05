@@ -730,7 +730,7 @@ bool sendMail() {
 		mail.SetXMailer("The Bat! (v3.02) Professional");
 
 		for (int i = 0; i < number_of_screens; i++) {
-			buffer << "Window" << i + 1 << "succeed times: " << success_time[i];
+			buffer << "Window " << i + 1 << " succeed times: " << success_time[i];
 			mail.AddMsgLine(buffer.str().c_str());
 			buffer.str("");
 		}
