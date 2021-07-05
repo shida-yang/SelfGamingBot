@@ -723,7 +723,7 @@ bool sendMail() {
 		mail.SetSenderName(buffer.str().c_str());
 		mail.SetSubject(buffer.str().c_str());
 		buffer.str("");
-		mail.SetSenderMail(EMAIL_LOGIN_USERNAME);
+		mail.SetSenderMail("user@domain.com");
 		mail.SetReplyTo(EMAIL_LOGIN_USERNAME);
 		mail.AddRecipient("shidayang@ufl.edu");
 		mail.SetXPriority(XPRIORITY_NORMAL);
