@@ -244,7 +244,17 @@ int main() {
 
 					wait_for_running_finish();
 
-					if (get_pixel_color(window_x + 543, window_y + 627) != 4413) {	// D3D9=4413, OpenGL=???
+					int check_success_color = get_pixel_color(window_x + 543, window_y + 627);
+					int curr_color = check_success_color - 1;
+					Sleep(500);
+					
+					while (curr_color != check_success_color) {
+						check_success_color = curr_color;
+						curr_color = get_pixel_color(window_x + 543, window_y + 627);
+						Sleep(500);
+					}
+
+					if (check_success_color != 4413) {	// D3D9=4413, OpenGL=???
 						route_failed[i] = 1;
 
 						my_time = time(NULL);
@@ -572,11 +582,9 @@ int main() {
 				continue;
 			}
 
-			for (int i = 0; i < number_of_screens; i++) {
-				min_window(color_screen_windows[i]);
-				//PostMessage(color_screen_windows[i], WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				//Sleep(1000);
-			}
+			//for (int i = 0; i < number_of_screens; i++) {
+			//	min_window(color_screen_windows[i]);
+			//}
 
 			for (int i = 0; i < number_of_screens && i<qq_pwd.size(); i++) {
 				printf("[%d] Logging in...\n", i);
